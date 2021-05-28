@@ -1,25 +1,45 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import ItemList from './ItemList';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state={ item: []}
+
+  // initialize the counter
+  nextItemId = 0;
+
+  makeItem(){
+    return {
+      id: this.nextItemId++,
+      value: Math.random()
+    }
+  }
+
+  // The Right Way:
+  // copy the existing items and add a new one
+  addItemImmutably=()=>{
+    this.setState({
+      item: [...this.state.item, this.makeItem()]
+    })
+  }
+
+    // The Wrong Way:
+  // mutate items and set it back
+  addItemMutably = () => {
+    this.state.item.push(this.makeItem());
+    this.setState({ item: this.state.items });
+  };
+  
+  render(){
+    return(
+      <div>
+        <button onClick={this.addItemImmutably}>Add Item immutably</button>
+        <button onClick={this.addItemMutably}>Add item Mutably</button>
+        <ItemList items={this.state.item}/>
+      </div>
+    )
+  }
 }
 
 export default App;
